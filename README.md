@@ -1,77 +1,138 @@
-# Neural Brains AI 3.0 — Voice Conversation
+# Neural Brains AI 3.0
 
-This release preserves the original v2 classifier, SQLite experience memory, persistent weights, dashboard generator, and tests. It adds a local Python HTTP server and a browser voice interface.
+Neural Brains AI is a personal project I've been working on to explore neural networks, conversational AI, and voice interaction.
 
-## Requirements
-- Python 3.10 or newer (the core server uses only the Python standard library).
-- A recent Google Chrome browser for the Web Speech API microphone experience.
-- Microphone permission for `http://127.0.0.1:8765`.
+I started this project to understand how different AI components can work together in one application. It currently has a Python backend, a browser-based dashboard, a custom neural network implementation, local memory storage, and Gemini API integration.
 
-## Run on macOS
-From the project root in VS Code Terminal:
+This is still a work in progress. I'm continuing to improve the application and try out new ideas as development moves forward.
+
+## What it currently includes
+
+- A custom Python neural network for basic classification.
+- A text encoder that supports Unicode text.
+- Gemini API integration for conversational responses.
+- Browser-based voice input and text-to-speech.
+- SQLite storage for conversation and experience memory.
+- Model weight saving and loading.
+- A dashboard for interacting with the application.
+- An optional Ollama integration.
+
+Some of these components are experimental, and there is still plenty of room for improvement.
+
+## Technologies used
+
+- Python
+- HTML, CSS, and JavaScript
+- Google Gemini API
+- SQLite
+- Web Speech API
+- Ollama (optional)
+
+## Project structure
+
+```text
+neural-brains-ai/
+│
+├── neural_brains/    # Python application
+├── web/              # Dashboard
+├── tests/            # Automated tests
+├── docs/             # Project documentation
+├── data/             # Local application data
+│
+├── .gitignore
+├── LICENSE
+├── README.md
+└── requirements.txt
+```
+
+The `data/` folder is created locally when the application needs it. It is not part of the public repository.
+
+## Running the project locally
+
+First, clone the repository:
+
+```bash
+git clone https://github.com/venureddy1133-netizen/neural-brains-ai.git
+cd neural-brains-ai
+```
+
+Create and activate a virtual environment:
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-python3 -m unittest discover -s tests -v
+```
+
+The current Python application uses standard-library modules, so there are no third-party Python dependencies to install at this stage.
+
+Configure your Gemini API key in a local `.env` file:
+
+```text
+GEMINI_API_KEY=your_api_key_here
+```
+
+You can optionally configure the Gemini model using `GEMINI_MODEL`.
+
+Start the application:
+
+```bash
 python3 -m neural_brains --voice
 ```
 
-Open **http://127.0.0.1:8765** in Google Chrome. The page is the interactive 3.0E command center with Overview, Voice & Chat, Experience Memory, Neural Network, and Settings & Status sections. It refreshes live statistics and recent memory every 15 seconds. Keep the terminal running while using the assistant. Press the microphone button and speak. Enable wake-word mode to say **“Hey Neural Brains”** followed by your question. The page must remain open; it does not listen while Chrome is closed.
+Then open:
 
-Stop the server with `Ctrl+C`.
+http://127.0.0.1:8765
 
-## Voice and privacy notes
-- Speech recognition uses the browser's Web Speech API. Chrome may send audio to an online speech recognition service; this is not guaranteed to be offline.
-- Speech output uses the browser's built-in speech synthesis.
-- The Python API server binds to `127.0.0.1` only and is not exposed to your local network.
-- Conversation text and responses are stored in `data/brain_memory.sqlite3` as plaintext. Do not store passwords, financial details, or other sensitive information.
-- If microphone permission is denied, allow it in Chrome's site settings and reload the page.
+Keep the terminal running while using the dashboard. Press `Ctrl + C` to stop the application.
 
-## Optional: connect a local conversational model with Ollama
-Without Ollama, the assistant uses a deliberately limited fallback. For broader open-ended answers, install Ollama for macOS, then run:
+## Running the tests
 
-```bash
-ollama pull llama3.2:3b
-ollama serve
-```
+I've included tests for the neural network, text encoder, agent, conversation engine, memory, and dashboard.
 
-In another terminal, start Neural Brains as above. The Python app will use `llama3.2:3b` at `http://127.0.0.1:11434` when it is available. To select another model:
+Run them with:
 
-```bash
-NEURAL_BRAINS_MODEL=qwen2.5:3b python3 -m neural_brains --voice
-```
-
-The model is optional; the base voice interface does not require it or any pip packages.
-
-## Existing v2 commands
-```bash
-python3 -m neural_brains --demo
-python3 -m neural_brains --dashboard
-python3 -m neural_brains
-```
-
-Interactive commands: `think`, `teach`, `memory`, `dashboard`, `stats`, `quit`.
-
-## Tests
 ```bash
 python3 -m unittest discover -s tests -v
 ```
 
-## Interactive dashboard (3.0E)
-- Overview metrics for stored experiences, training updates, output classes, and model persistence.
-- Experience distribution chart based on the latest 30 memory records.
-- Recent activity feed and conceptual network visualization.
-- Voice & Chat page with microphone controls, typed chat, and speech output.
-- Searchable, filterable, read-only memory browser.
-- Neural Network architecture view and Settings & Status diagnostics.
-- Manual refresh and automatic refresh every 15 seconds.
+The initial test suite completed successfully with 18 passing tests.
 
-## Architecture
-- Existing `BrainAgent` and `NeuralNetwork`: three-class intent classifier.
-- Existing `MemoryStore`: SQLite experience store.
-- New `ConversationEngine`: optional local Ollama chat plus explicit limited fallback.
-- New `server.py`: loopback-only HTTP API.
-- New `web/index.html`: browser microphone, optional wake-word phrase matching, chat UI, and spoken responses.
+## Files not included in this repository
 
-This is a voice-enabled assistant prototype, not AGI, not a human brain, and not an autonomous robot controller.
+I've intentionally left out some local files because they are not needed in a public source-code repository.
+
+- `.env` – contains my private Gemini API key and local configuration.
+- `.venv/` – my local Python environment.
+- `data/` – local memory databases and saved model data.
+- `__pycache__/` and `*.pyc` – generated Python cache files.
+- Local backups, experiment files, and system-generated files.
+
+These exclusions are managed through `.gitignore`.
+
+The actual API key stays on my local machine. Anyone running this project will need to create their own `.env` file and provide their own API key.
+
+## What's next?
+
+I don't consider this a finished project. There are several things I'd like to work on as I continue developing it:
+
+- Improve multilingual text handling and conversational responses.
+- Make voice interaction more consistent across languages.
+- Improve how conversation context and memory are managed.
+- Experiment with neural network architecture and training.
+- Continue working on the dashboard and its usability.
+- Explore other AI model integrations.
+- Add more tests and improve reliability.
+
+I'll keep updating this repository as I make changes, add features, and test new ideas. The implementation may change along the way.
+
+## Project status
+
+**Version:** 3.0F – Neural
+
+**Status:** Active development
+
+**GitHub:** https://github.com/venureddy1133-netizen
+
+---
+
+This project is an ongoing learning and development effort. It is an experimental AI application, not a claim to have built artificial general intelligence or a human brain.
