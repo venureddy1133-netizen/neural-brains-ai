@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f2f1ec">
+<title>Neural Brains AI 3.0F — Neural Studio</title>
+<style>
+:root{color-scheme:dark;--bg:#0a1020;--panel:#121c30;--panel2:#0e1729;--line:#263650;--text:#edf3ff;--muted:#94a6c4;--mint:#71dec6;--blue:#86b7ff;--amber:#f2c879;--red:#ff8c83}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 20% -10%,#1a3153 0,transparent 38%),var(--bg);color:var(--text);font:14px/1.5 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input{font:inherit}button{cursor:pointer}button:disabled{opacity:.45;cursor:not-allowed}
+.app{min-height:100vh;display:grid;grid-template-columns:245px minmax(0,1fr)}
+.sidebar{position:sticky;top:0;height:100vh;padding:23px 16px;border-right:1px solid var(--line);background:#0b1426eF;display:flex;flex-direction:column;gap:24px}
+.brand{display:flex;gap:11px;align-items:center;padding:0 7px}.brandmark{width:39px;height:39px;border-radius:13px;background:linear-gradient(135deg,#1d766e,#234c83);display:grid;place-items:center;font-size:21px}.brand strong{display:block;font-size:15px}.brand small{color:var(--muted)}
+.navlabel{color:#7185a7;text-transform:uppercase;letter-spacing:.12em;font-size:10px;padding:0 10px;margin-bottom:7px}
+nav{display:grid;gap:5px}.navbtn{border:0;background:transparent;color:var(--muted);padding:11px 12px;border-radius:10px;text-align:left;display:flex;align-items:center;gap:12px}.navbtn .ico{width:20px;text-align:center;font-size:16px}.navbtn.active,.navbtn:hover{background:#1a2a43;color:var(--text)}.sidefoot{margin-top:auto;border:1px solid var(--line);border-radius:13px;padding:12px;background:var(--panel2)}.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mint);margin-right:7px}.sidefoot small{color:var(--muted)}
+main{min-width:0;padding:26px clamp(16px,3vw,38px) 45px;max-width:1600px;width:100%;margin:auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:25px}.eyebrow{color:var(--mint);font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:700}.topbar h1{font-size:clamp(23px,3vw,32px);letter-spacing:-.04em;margin:4px 0}.sub{color:var(--muted)}.topactions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.statuspill,.tag{border:1px solid var(--line);border-radius:999px;padding:7px 11px;color:var(--muted);font-size:11px}.statuspill.ok{color:var(--mint);border-color:#28594f}.statuspill.bad{color:var(--red);border-color:#70403f}
+.btn{border:1px solid var(--line);border-radius:10px;background:#1a2942;color:var(--text);padding:9px 13px}.btn:hover{border-color:#547194}.btn.primary{background:var(--mint);color:#08221e;border-color:var(--mint);font-weight:700}.btn.ghost{background:transparent}
+.page{display:none}.page.active{display:block}.pagehead{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap;margin:0 0 17px}.pagehead h2{font-size:20px;margin:0}.pagehead p{margin:3px 0 0;color:var(--muted)}
+.grid{display:grid;gap:14px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:15px}.card{background:linear-gradient(145deg,#15223a,#111b2e);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0}.metriclabel{color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:8px}.metricvalue{font-size:29px;font-weight:750;letter-spacing:-.04em;margin-top:7px}.metricnote{font-size:11px;color:#7f93b3;margin-top:2px}.twocol{grid-template-columns:minmax(0,1.4fr) minmax(280px,.9fr)}.threecol{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card h3{font-size:14px;margin:0 0 14px}.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:13px}.cardhead h3{margin:0}
+.chartwrap{height:220px;display:flex;align-items:end;gap:16px;padding:15px 10px 4px}.barcol{flex:1;display:flex;align-items:center;flex-direction:column;gap:8px;min-width:0}.bartrack{height:155px;width:min(48px,75%);border-radius:9px;background:#0a1425;display:flex;align-items:end;overflow:hidden}.barfill{width:100%;border-radius:9px 9px 3px 3px;min-height:3px;background:linear-gradient(180deg,#79e3ca,#3d8fa4);transition:height .35s}.barname{font-size:11px;color:var(--muted)}.barcount{font-size:12px;font-weight:700}
+.network{width:100%;height:auto;display:block;background:radial-gradient(ellipse,#162944,#0c1729);border:1px solid var(--line);border-radius:12px}.network .edge{stroke:#49617f;stroke-width:1;opacity:.45}.network .node{fill:#77d9c3;stroke:#c4fff1;stroke-width:1}.network .input{fill:#85b5ff;stroke:#d8e8ff}.network .output{fill:#f0c775;stroke:#fff0c9}
+.activity{display:grid;gap:0}.activityrow{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:start;padding:11px 0;border-bottom:1px solid #263650}.activityrow:last-child{border:0}.activitydot{width:8px;height:8px;border-radius:50%;background:var(--blue);margin-top:6px}.activitytext{min-width:0;overflow-wrap:anywhere}.activitytext strong{display:block;font-size:12px;font-weight:600}.activitytext small,.time{font-size:10px;color:var(--muted)}
+.voicebox{text-align:center;padding:22px 12px}.mic{width:92px;height:92px;border-radius:50%;border:1px solid #42677b;background:#173e4b;color:#c7fff2;font-size:34px;box-shadow:0 0 0 9px #70d6c211;transition:.2s}.mic.listening{background:#8c332e;border-color:#ff8b80;box-shadow:0 0 0 12px #ff6b5c22,0 0 32px #ff6b5c55}.voicecontrols{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:14px 0}.voicehint{color:var(--muted);font-size:11px}.statusline{min-height:22px;color:var(--mint);font-size:12px}
+.chat{height:370px;overflow:auto;display:flex;flex-direction:column;gap:11px;padding:4px}.bubble{max-width:86%;border-radius:13px;padding:11px 14px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}.bubble.user{align-self:flex-end;background:#214b58}.bubble.assistant{align-self:flex-start;background:#202c43;border:1px solid var(--line)}.composer{display:flex;gap:8px;margin-top:13px}.composer input,.search{width:100%;min-width:0;background:#0b1528;border:1px solid var(--line);border-radius:10px;color:var(--text);padding:11px 12px}.composer button{white-space:nowrap}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:12px}table{width:100%;border-collapse:collapse;min-width:620px}th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #263650;vertical-align:top}th{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#91a5c5;background:#101a2d;position:sticky;top:0}td{font-size:12px;color:#d8e3f7}tr:last-child td{border:0}.empty{padding:30px;text-align:center;color:var(--muted)}
+.filters{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.filters .search{max-width:340px}.select{background:#0b1528;border:1px solid var(--line);color:var(--text);padding:10px;border-radius:10px}
+.memorytext{max-width:540px;white-space:normal;overflow-wrap:anywhere}.labeltag{display:inline-block;border-radius:6px;padding:3px 7px;background:#1c3651;color:#a9d2ff;font-size:10px}.labeltag.greeting{background:#173c39;color:#91e8d3}.labeltag.task{background:#493b24;color:#f3d18e}
+.notice{font-size:11px;color:var(--muted);line-height:1.6}.settingsrow{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid var(--line)}.settingsrow:last-child{border:0}.settingsrow strong{display:block;font-size:13px}.settingsrow small{color:var(--muted)}
+@media(max-width:1000px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.twocol{grid-template-columns:1fr}}
+@media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:12px;border-right:0;border-bottom:1px solid var(--line);gap:10px}.brand{padding:4px}.sidebar .navlabel,.sidefoot{display:none}nav{display:flex;overflow:auto}.navbtn{white-space:nowrap;padding:9px}.navbtn .ico{display:none}main{padding:20px 13px 35px}.metrics{gap:9px}.metricvalue{font-size:24px}.threecol{grid-template-columns:1fr}.chat{height:320px}}
+
+/* Voice & Chat refresh: dedicated, responsive AI conversation workspace */
+.chat-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 16px}
+.chat-heading h2{font-size:clamp(20px,2.5vw,25px);letter-spacing:-.035em;margin:3px 0 2px}
+.chat-heading p{margin:0;color:var(--muted)}
+.chat-heading .eyebrow{font-size:10px}
+.chat-engine-wrap{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chat-card{padding:0;overflow:hidden;border-color:#304563;background:linear-gradient(150deg,#111e34,#0e182b);box-shadow:0 18px 55px #02081555}
+.chat-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 20px;border-bottom:1px solid #2a3b57;background:#132139}
+.assistant-identity{display:flex;align-items:center;gap:11px;min-width:0}
+.assistant-avatar{width:39px;height:39px;flex:0 0 39px;border-radius:13px;display:grid;place-items:center;font-size:19px;color:#e4fff8;background:linear-gradient(145deg,#267a76,#31578b);box-shadow:inset 0 1px #ffffff30}
+.assistant-identity strong{display:block;font-size:13px;letter-spacing:.01em}
+.assistant-identity small{display:block;color:var(--muted);font-size:11px}
+.chat-secure{display:inline-flex;align-items:center;gap:7px;color:#9cb2ce;font-size:11px;white-space:nowrap}
+.chat-secure .dot{width:7px;height:7px;margin:0}
+.chat-card .chat{height:clamp(390px,55vh,660px);padding:24px clamp(16px,3vw,30px);gap:17px;background:radial-gradient(ellipse at 50% 0%,#1a2b4550,transparent 55%),#0d1729}
+.chat-card .bubble{max-width:min(82%,780px);padding:13px 16px;border-radius:17px;font-size:14px;line-height:1.65;box-shadow:0 5px 18px #02081525}
+.chat-card .bubble.assistant{background:linear-gradient(145deg,#1b2b44,#17243a);border:1px solid #2b405f;border-top-left-radius:6px}
+.chat-card .bubble.user{background:linear-gradient(145deg,#236a70,#24536d);border:1px solid #347d85;border-top-right-radius:6px;color:#f3fffe}
+.chat-footer{padding:14px 18px 12px;border-top:1px solid #2a3b57;background:#121f34}
+.chat-status-row{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:24px;color:#9bb0cb;font-size:11px}
+.chat-status-copy{display:flex;align-items:center;gap:8px;min-width:0}
+.chat-status-copy span:last-child{overflow-wrap:anywhere}
+.chat-status-dot{width:7px;height:7px;border-radius:50%;background:#7186a5;flex:0 0 7px}
+.chat-status-dot.active{background:var(--mint);box-shadow:0 0 0 4px #71dec622}
+.chat-composer{display:flex;align-items:center;gap:9px;margin:10px 0 0;padding:7px;border-radius:17px;border:1px solid #354b6c;background:#0a1426;box-shadow:0 8px 24px #03091650}
+.chat-composer:focus-within{border-color:#5b8aaf;box-shadow:0 0 0 3px #71dec61c,0 8px 24px #03091650}
+.chat-composer input{flex:1;width:100%;min-width:0;border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;padding:12px 9px!important;color:var(--text)}
+.chat-composer input::placeholder{color:#7186a5}
+.chat-mic{width:44px;height:44px;flex:0 0 44px;border:1px solid #3b5575;border-radius:13px;background:#1b2b45;color:#d8eaff;display:grid;place-items:center;transition:transform .18s,border-color .18s,background .18s,box-shadow .18s}
+.chat-mic:hover{transform:translateY(-1px);border-color:#70b0c3;background:#223b59}
+.chat-mic svg{width:20px;height:20px}
+.chat-mic.listening{color:#fff;background:#8c332e;border-color:#ff8b80;box-shadow:0 0 0 4px #ff6b5c22,0 0 22px #ff6b5c44;animation:micPulse 1.6s ease-in-out infinite}
+.chat-mic:focus-visible,.send-button:focus-visible{outline:3px solid #8fc9ff;outline-offset:3px}
+.send-button{height:44px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 17px;border:1px solid #72e3cb;border-radius:13px;background:linear-gradient(135deg,#83efd3,#57cdbb);color:#08251f;font-weight:750;white-space:nowrap;transition:transform .18s,filter .18s}
+.send-button:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.send-button svg{width:17px;height:17px}
+.compose-hint{margin:8px 3px 0;color:#7e93b3;font-size:10px;text-align:center}
+@keyframes micPulse{0%,100%{box-shadow:0 0 0 4px #ff6b5c22,0 0 15px #ff6b5c2b}50%{box-shadow:0 0 0 7px #ff6b5c16,0 0 27px #ff6b5c55}}
+@media(max-width:700px){.chat-toolbar{padding:12px 14px}.chat-card .chat{height:calc(100dvh - 430px);min-height:300px;padding:17px 12px}.chat-card .bubble{max-width:92%;font-size:13px}.chat-footer{padding:11px}.chat-composer{gap:6px;padding:5px}.chat-mic{width:42px;height:42px;flex-basis:42px}.send-button{width:44px;padding:0;font-size:0}.send-button svg{width:20px;height:20px}.chat-secure{display:none}}
+
+</style>
+
+<style id="neural-editorial-design">
+:root{
+  color-scheme:light;
+  --bg:#f2f1ec;--panel:#fffefa;--panel2:#f8f7f2;--line:#e4e1d8;
+  --text:#202722;--muted:#737a73;--mint:#2e6958;--blue:#54766b;
+  --amber:#b77b35;--red:#b74d3d;--ink:#202722;--paper:#fffefa;
+  --accent:#c45a3b;--accent-soft:#f6e9e2;--forest:#28594d;--forest-soft:#e8efea;
+}
+html{background:var(--bg);scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:14px;line-height:1.55;letter-spacing:-.008em;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;grid-template-columns:252px minmax(0,1fr);background:var(--bg)}
+.sidebar{
+  position:sticky;top:0;height:100vh;padding:27px 17px 18px;
+  background:#fbfaf6;border-right:1px solid #dfdcd2;gap:30px;
+}
+.brand{gap:12px;padding:0 8px}
+.brandmark{
+  width:40px;height:40px;border-radius:10px;background:#202722;color:#fffefa;
+  display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:-.06em;
+  border:1px solid #202722;box-shadow:none;
+}
+.brand strong{font-size:12px;font-weight:800;letter-spacing:.105em;color:#222923}
+.brand small{display:block;margin-top:3px;color:#858980;font-size:9px;font-weight:650;letter-spacing:.13em}
+.navlabel{color:#999b91;font-size:9px;letter-spacing:.18em;font-weight:750;padding:0 11px;margin-bottom:8px}
+nav{gap:4px}
+.navbtn{
+  position:relative;min-height:43px;padding:10px 12px;border:0;border-radius:7px;
+  color:#697169;background:transparent;font-size:12px;font-weight:570;letter-spacing:0;
+  transition:background .16s,color .16s;
+}
+.navbtn .ico{width:18px;height:18px;display:grid;place-items:center;color:#868c83;font-size:0}
+.navbtn .ico svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}
+.navbtn:hover{background:#f0efe9;color:#303a33}
+.navbtn.active{background:#e9eee8;color:#254e42;font-weight:700}
+.navbtn.active:before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;border-radius:2px;background:#2e6958}
+.navbtn.active .ico{color:#2e6958}
+.sidefoot{margin-top:auto;border:1px solid #e1ded4;border-radius:8px;padding:13px 12px;background:#f7f6f1}
+.sidefoot strong{font-size:11px!important;font-weight:700;color:#303a33}
+.sidefoot .dot,.chat-secure .dot{background:#3f8a68}
+.sidefoot small{display:block;margin-top:5px;color:#858b82;font-size:10px;line-height:1.45}
+main{min-width:0;max-width:1600px;padding:31px clamp(22px,3.3vw,52px) 48px}
+.topbar{align-items:center;margin-bottom:30px;padding-bottom:20px;border-bottom:1px solid #dfdcd2}
+.eyebrow{color:#8a8f85;font-size:9px;font-weight:750;letter-spacing:.17em}
+.eyebrow-slash{padding:0 5px;color:#b8b8ae}
+.topbar h1{margin:7px 0 2px;color:#202722;font-size:31px;font-weight:690;letter-spacing:-.055em;line-height:1.12}
+.sub{color:#82877e;font-size:12px}
+.topactions{gap:8px}
+.statuspill,.tag{border:1px solid #e1ded5;border-radius:5px;padding:7px 10px;background:#fbfaf6;color:#787e75;font-size:10px;font-weight:620;letter-spacing:.015em}
+.statuspill.ok{color:#28634e;border-color:#cbded2;background:#edf4ee}
+.statuspill.bad{color:#9a4437;border-color:#ead0c9;background:#fbefec}
+.btn{border:1px solid #dcd9cf;border-radius:6px;background:#fffefa;color:#414941;padding:9px 12px;font-size:11px;font-weight:650;transition:background .16s,border-color .16s,transform .16s}
+.btn:hover{border-color:#bcbdb2;background:#f9f8f3;transform:translateY(-1px)}
+.btn.primary{background:#28594d;border-color:#28594d;color:white}
+.btn.primary:hover{background:#214b40}
+.btn.ghost{background:transparent;border-color:transparent;color:#69746b}
+.page{display:none}.page.active{display:block}
+.pagehead{margin:0 0 17px;align-items:center}
+.pagehead h2{margin:0;font-size:20px;font-weight:700;letter-spacing:-.04em;color:#252c26}
+.pagehead p{margin:4px 0 0;color:#81867e;font-size:12px}
+.grid{gap:13px}.metrics{grid-template-columns:repeat(4,minmax(0,1fr));margin-bottom:13px}
+.card{min-width:0;padding:18px 19px;border:1px solid #e2dfd6;border-radius:8px;background:#fffefa;box-shadow:0 1px 1px #282a2007}
+.card h3{margin:0 0 13px;color:#353d36;font-size:12px;font-weight:720;letter-spacing:-.01em}
+.cardhead{margin-bottom:14px}
+.metriclabel{color:#82877e;font-size:10px;font-weight:650;letter-spacing:.015em}
+.metriclabel span{color:#a1a59b}
+.metricvalue{margin-top:11px;color:#202722;font-size:31px;font-weight:680;letter-spacing:-.06em;line-height:1.05;font-variant-numeric:tabular-nums}
+.metricnote{margin-top:8px;color:#969a91;font-size:10px}
+.twocol{grid-template-columns:minmax(0,1.35fr) minmax(300px,.85fr)}
+.threecol{grid-template-columns:repeat(3,minmax(0,1fr))}
+.chartwrap{height:215px;gap:14px;padding:14px 10px 3px}
+.bartrack{height:145px;width:min(38px,76%);border-radius:4px;background:#f0f0e9}
+.barfill{border-radius:3px 3px 1px 1px;background:#4e8873;transition:height .35s}
+.barname{color:#83897f;font-size:10px}.barcount{color:#49554d;font-size:11px;font-variant-numeric:tabular-nums}
+.network{background:#faf9f5;border:1px solid #e6e3da;border-radius:6px}
+.network .edge{stroke:#b7c0b6;stroke-width:1;opacity:.6}
+.network .node{fill:#4e8873;stroke:#d7e8dd;stroke-width:1.5}
+.network .input{fill:#8a9aab;stroke:#e0e6e9}.network .output{fill:#c17b4e;stroke:#f3e1d0}
+.activityrow{grid-template-columns:9px minmax(0,1fr) auto;gap:10px;padding:10px 0;border-bottom:1px solid #eeece5}
+.activitydot{width:6px;height:6px;margin-top:7px;background:#8b9c8e}
+.activitytext strong{color:#414941;font-size:11px;font-weight:610;line-height:1.45}
+.activitytext small,.time{color:#969a91;font-size:9px}
+.empty{padding:24px;text-align:center;color:#92978e;font-size:11px}
+.voicebox{padding:22px 12px 16px;text-align:center}
+.mic{
+  width:76px;height:76px;border:1px solid #28594d;border-radius:50%;
+  background:#28594d;color:#fffefa;font-size:28px;box-shadow:0 0 0 6px #28594d12;
+  transition:transform .18s,background .18s,box-shadow .18s;
+}
+.mic:hover{transform:translateY(-2px);background:#214b40;box-shadow:0 0 0 8px #28594d12}
+.mic{display:inline-grid;place-items:center}.mic svg{width:27px;height:27px}
+.mic.listening{background:#b74d3d;border-color:#b74d3d;box-shadow:0 0 0 7px #b74d3d18,0 0 0 14px #b74d3d0c}
+.voicehint,.notice{color:#898e85;font-size:10px;line-height:1.65}
+.statusline{min-height:22px;color:#39745d;font-size:11px;font-weight:600}
+.voicecontrols{gap:7px;margin:12px 0}
+.chat{height:370px;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:4px}
+.bubble{max-width:86%;padding:11px 14px;border-radius:8px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}
+.bubble.user{align-self:flex-end;background:#28594d;color:#fffefa;border:1px solid #28594d;border-bottom-right-radius:2px}
+.bubble.assistant{align-self:flex-start;background:#f5f4ef;color:#2d352e;border:1px solid #e8e5dc;border-bottom-left-radius:2px}
+.composer{display:flex;gap:8px;margin-top:13px}
+.composer input,.search{width:100%;min-width:0;background:#fffefa;border:1px solid #dedbd1;border-radius:6px;color:#202722;padding:11px 12px}
+.composer input:focus,.search:focus,.select:focus{outline:2px solid #9ab5a6;outline-offset:1px}
+.tablewrap{overflow:auto;border:1px solid #e4e1d8;border-radius:7px;background:#fffefa}
+table{width:100%;border-collapse:collapse;min-width:620px}
+th,td{text-align:left;padding:11px 13px;border-bottom:1px solid #eeece5;vertical-align:top}
+th{background:#f7f6f1;color:#83887e;font-size:9px;font-weight:750;letter-spacing:.12em;text-transform:uppercase}
+td{color:#4c544d;font-size:11px}
+tr:last-child td{border:0}
+.filters{gap:8px;margin-bottom:12px}.filters .search{max-width:360px}
+.select{background:#fffefa;border:1px solid #dedbd1;color:#4b534b;padding:10px;border-radius:6px;font-size:11px}
+.labeltag{display:inline-block;padding:3px 7px;border-radius:4px;background:#e8edf0;color:#506779;font-size:9px;font-weight:700}
+.labeltag.greeting{background:#e7f0e9;color:#3b7157}.labeltag.task{background:#f5ede3;color:#97653b}
+.settingsrow{padding:15px 0;border-bottom:1px solid #ece9e1}.settingsrow strong{color:#343d35;font-size:12px;font-weight:700}.settingsrow small{display:block;margin-top:3px;color:#858a81;font-size:10px}
+.stat{padding:15px;border:1px solid #e7e4dc;border-radius:6px;background:#faf9f5}
+.stat strong{display:block;margin-top:5px;color:#202722;font-size:25px;letter-spacing:-.05em}
+.stat small,.muted{color:#898e85;font-size:10px}
+/* Chat: quiet, deliberate and tool-like rather than a generic AI gradient card. */
+.chat-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:0 0 17px}
+.chat-heading h2{margin:4px 0 3px;color:#202722;font-size:25px;font-weight:700;letter-spacing:-.05em}
+.chat-heading p{margin:0;color:#82877e;font-size:12px}
+.chat-heading .eyebrow{font-size:9px}
+.chat-engine-wrap{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.chat-card{padding:0;overflow:hidden;border:1px solid #e1ded5;border-radius:9px;background:#fffefa;box-shadow:0 2px 8px #252a2007}
+.chat-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 19px;border-bottom:1px solid #e9e6de;background:#fffefa}
+.assistant-identity{display:flex;align-items:center;gap:11px;min-width:0}
+.assistant-avatar{width:36px;height:36px;flex:0 0 36px;border:1px solid #28594d;border-radius:8px;display:grid;place-items:center;background:#28594d;color:#fffefa;font-size:10px;font-weight:800;letter-spacing:-.04em;box-shadow:none}
+.assistant-identity strong{display:block;color:#28332b;font-size:12px;font-weight:750}
+.assistant-identity small{display:block;margin-top:2px;color:#8b9087;font-size:10px}
+.chat-secure{display:inline-flex;align-items:center;gap:7px;color:#81877e;font-size:10px;white-space:nowrap}
+.chat-secure .dot{width:6px;height:6px;margin:0}
+.chat-card .chat{height:clamp(390px,55vh,660px);padding:25px clamp(18px,4vw,42px);gap:16px;background:#faf9f6}
+.chat-card .bubble{max-width:min(82%,780px);padding:13px 16px;border-radius:8px;font-size:13px;line-height:1.7;box-shadow:none}
+.chat-card .bubble.assistant{background:#fffefa;color:#303a32;border:1px solid #e9e6de;border-bottom-left-radius:2px}
+.chat-card .bubble.user{background:#28594d;color:#fffefa;border:1px solid #28594d;border-bottom-right-radius:2px}
+.chat-footer{padding:12px 18px 13px;border-top:1px solid #e9e6de;background:#fffefa}
+.chat-voice-tools{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:9px;padding:8px 9px;border:1px solid #ece9e1;border-radius:7px;background:#faf9f6}
+.voice-language-label{color:#737a73;font-size:10px;font-weight:700}
+.voice-language{min-width:135px;padding:7px 9px;font-size:10px}
+.chat-speak-toggle{display:inline-flex;align-items:center;gap:6px;color:#737a73;font-size:10px;white-space:nowrap}
+.chat-speak-toggle input{accent-color:#28594d}
+.speech-buttons{display:flex;gap:6px;margin-left:auto}
+.speech-buttons .btn{padding:7px 10px;font-size:10px}
+.chat-status-row{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:23px;color:#858b82;font-size:10px}
+.chat-status-copy{display:flex;align-items:center;gap:8px;min-width:0}
+.chat-status-copy span:last-child{overflow-wrap:anywhere}
+.chat-status-dot{width:6px;height:6px;border-radius:50%;background:#babdb5;flex:0 0 6px}
+.chat-status-dot.active{background:#3e8a67;box-shadow:0 0 0 3px #3e8a671b}
+.chat-composer{display:flex;align-items:center;gap:8px;margin:9px 0 0;padding:6px;border:1px solid #dcd9cf;border-radius:8px;background:#fffefa;box-shadow:0 2px 5px #252a2007}
+.chat-composer:focus-within{border-color:#91aa9a;box-shadow:0 0 0 3px #4d806018}
+.chat-composer input{flex:1;width:100%;min-width:0;border:0!important;outline:0!important;background:transparent!important;box-shadow:none!important;padding:11px 8px!important;color:#202722}
+.chat-composer input::placeholder{color:#a1a49b}
+.chat-mic{width:42px;height:42px;flex:0 0 42px;border:1px solid #d9ded6;border-radius:7px;background:#eff3ed;color:#28594d;display:grid;place-items:center;transition:background .16s,border-color .16s,transform .16s}
+.chat-mic:hover{transform:translateY(-1px);border-color:#a9bcae;background:#e6eee7}
+.chat-mic svg{width:19px;height:19px}
+.chat-mic.listening{color:#fff;background:#b74d3d;border-color:#b74d3d;box-shadow:0 0 0 3px #b74d3d1c;animation:none}
+.chat-mic:focus-visible,.send-button:focus-visible{outline:2px solid #4d8060;outline-offset:3px}
+.send-button{height:42px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;border:1px solid #28594d;border-radius:7px;background:#28594d;color:#fffefa;font-size:11px;font-weight:750;white-space:nowrap;transition:background .16s,transform .16s}
+.send-button:hover{transform:translateY(-1px);background:#214b40}
+.send-button svg{width:16px;height:16px}
+.compose-hint{margin:8px 3px 0;color:#989c93;font-size:9px;text-align:left}
+footer.notice{padding-top:17px;border-top:1px solid #dfdcd2;color:#9a9d94;font-size:9px;letter-spacing:.035em}
+@media(max-width:1000px){.app{grid-template-columns:220px minmax(0,1fr)}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.twocol{grid-template-columns:1fr}}
+@media(max-width:700px){
+ .app{grid-template-columns:1fr}.sidebar{position:relative;height:auto;padding:12px 12px 10px;border-right:0;border-bottom:1px solid #dfdcd2;gap:10px}
+ .brand{padding:2px 4px}.brandmark{width:34px;height:34px}.sidebar .navlabel,.sidefoot{display:none}
+ nav{display:flex;overflow-x:auto;gap:3px;padding:2px 0 1px}.navbtn{white-space:nowrap;min-height:37px;padding:8px 10px;font-size:11px}.navbtn .ico{display:none}.navbtn.active:before{top:auto;right:10px;bottom:2px;left:10px;width:auto;height:2px}
+ main{padding:21px 14px 32px}.topbar{margin-bottom:22px;padding-bottom:14px}.topbar h1{font-size:25px}.topactions{width:100%;justify-content:space-between}
+ .metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.card{padding:14px}.metricvalue{font-size:26px}.threecol{grid-template-columns:1fr}.chat-heading h2{font-size:22px}
+ .chat-toolbar{padding:11px 12px}.chat-card .chat{height:calc(100dvh - 405px);min-height:300px;padding:16px 11px}.chat-card .bubble{max-width:92%;font-size:12px;padding:11px 12px}
+ .chat-footer{padding:10px}.chat-composer{gap:5px;padding:4px}.chat-mic{width:40px;height:40px;flex-basis:40px}.send-button{width:42px;height:40px;padding:0;font-size:0}.send-button svg{width:19px;height:19px}.chat-secure{display:none}
+ .chat-voice-tools{gap:7px;padding:8px}.voice-language-label{flex:0 0 auto}.voice-language{flex:1;min-width:120px}.chat-speak-toggle{margin-left:2px}.speech-buttons{width:100%;margin-left:0}.speech-buttons .btn{flex:1}
+ .filters{align-items:stretch}.filters .search{max-width:none;flex:1 1 100%}.select{flex:1}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brandmark" aria-hidden="true">NB</div><div><strong>NEURAL BRAINS</strong><small>PERSONAL INTELLIGENCE</small></div></div>
+  <div><div class="navlabel">Workspace</div><nav>
+    <button class="navbtn active" data-page="overview"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1"/><rect x="13.5" y="3.5" width="7" height="7" rx="1"/><rect x="3.5" y="13.5" width="7" height="7" rx="1"/><rect x="13.5" y="13.5" width="7" height="7" rx="1"/></svg></span>Overview</button>
+    <button class="navbtn" data-page="voice"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-6.5A7.5 7.5 0 0 1 10.5 7H12"/><path d="M16 3v8M12.5 6.5h7"/></svg></span>Voice & Chat</button>
+    <button class="navbtn" data-page="memory"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 4.5h11a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h11M9 8h6M9 11h6"/></svg></span>Experience Memory</button>
+    <button class="navbtn" data-page="network"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="18.5" cy="5" r="2"/><circle cx="18.5" cy="19" r="2"/><path d="m7 11 9.5-5M7 13l9.5 5"/></svg></span>Neural Network</button>
+    <button class="navbtn" data-page="settings"><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg></span>Settings & Status</button>
+  </nav></div>
+  <div class="sidefoot"><div><span class="dot"></span><strong style="font-size:12px">Local backend</strong></div><small id="sideStatus">Checking connection…</small></div>
+</aside>
+<main>
+<header class="topbar">
+  <div><div class="eyebrow">NEURAL BRAINS <span class="eyebrow-slash">/</span> LOCAL SYSTEM</div><h1 id="pageTitle">Overview</h1><div class="sub" id="pageSub">Live view of your local assistant and learning activity.</div></div>
+  <div class="topactions"><span class="statuspill" id="connection">Connecting…</span><button class="btn" id="refresh">↻ Refresh data</button></div>
+</header>
+
+<section class="page active" id="page-overview">
+  <div class="grid metrics">
+    <article class="card"><div class="metriclabel">Stored experiences <span>▤</span></div><div class="metricvalue" id="mExperiences">—</div><div class="metricnote">SQLite memory records</div></article>
+    <article class="card"><div class="metriclabel">Training updates <span>⌁</span></div><div class="metricvalue" id="mUpdates">—</div><div class="metricnote">Neural network weight updates</div></article>
+    <article class="card"><div class="metriclabel">Output classes <span>◉</span></div><div class="metricvalue">3</div><div class="metricnote">Greeting · Question · Task</div></article>
+    <article class="card"><div class="metriclabel">Model persistence <span>⬡</span></div><div class="metricvalue" id="mModel" style="font-size:20px">—</div><div class="metricnote" id="modelPath">Checking saved model</div></article>
+  </div>
+  <div class="grid twocol">
+    <article class="card"><div class="cardhead"><h3>Experience distribution</h3><span class="tag">Recent memory sample</span></div><div class="chartwrap" id="distribution"><div class="empty">Loading experience data…</div></div><p class="notice">Counts are based on the records returned by the memory endpoint, not a full historical analytics aggregation.</p></article>
+    <article class="card"><div class="cardhead"><h3>Voice assistant</h3><span class="tag">Browser microphone</span></div><div class="voicebox"><button class="mic" id="mic" type="button" aria-label="Start microphone" aria-pressed="false" title="Start voice input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7"/></svg></button><h3 id="micTitle" style="margin:12px 0 3px">Talk to Neural Brains</h3><div class="voicehint">Press to start or stop voice recognition.</div><div class="voicecontrols"><button class="btn" id="stop" disabled>Stop listening</button><button class="btn" id="mute">Mute voice</button></div><div class="voicecontrols"><label class="notice"><input type="checkbox" id="wake"> Wake phrase mode</label><label class="notice"><input type="checkbox" id="speak" checked> Speak responses</label></div><div class="statusline" id="voiceStatus">Microphone is off.</div></div><p class="notice">Wake phrase: “Hey Neural Brains”. Keep this browser tab open while listening.</p></article>
+  </div>
+  <div class="grid twocol" style="margin-top:14px">
+    <article class="card"><div class="cardhead"><h3>Network architecture</h3><button class="btn ghost" data-goto="network">Explore →</button></div><div id="miniNetwork"></div><p class="notice">64 input features → 24 hidden units → 3 output classes.</p></article>
+    <article class="card"><div class="cardhead"><h3>Recent activity</h3><button class="btn ghost" data-goto="memory">View memory →</button></div><div class="activity" id="recentActivity"><div class="empty">Loading activity…</div></div></article>
+  </div>
+</section>
+
+<section class="page" id="page-voice">
+  <div class="chat-heading">
+    <div><div class="eyebrow">Your personal AI workspace</div><h2>Talk with Neural Brains</h2><p>Ask a question, explore an idea, or use your microphone to speak naturally.</p></div>
+    <div class="chat-engine-wrap"><span class="tag" id="engine">AI provider will appear here</span><span class="tag">Voice enabled</span></div>
+  </div>
+  <article class="card chat-card">
+    <div class="chat-toolbar">
+      <div class="assistant-identity"><div class="assistant-avatar" aria-hidden="true">NB</div><div><strong>Neural Brains</strong><small>Conversation workspace</small></div></div>
+      <div class="chat-secure"><span class="dot"></span> Local dashboard</div>
+    </div>
+    <div class="chat" id="chat" aria-live="polite"><div class="bubble assistant">What are you working on today?</div></div>
+    <div class="chat-footer">
+      <div class="chat-status-row"><div class="chat-status-copy"><span class="chat-status-dot" id="chatStatusDot"></span><span id="chatVoiceStatus" role="status" aria-live="polite">Microphone off · Choose a language, then tap the mic to speak.</span></div></div>
+      <div class="chat-voice-tools" aria-label="Voice settings">
+        <label class="voice-language-label" for="voiceLanguage">Voice language</label>
+        <select class="select voice-language" id="voiceLanguage" aria-label="Speech recognition and fallback voice language">
+          <option value="en-US">English (US)</option>
+          <option value="te-IN">Telugu</option>
+          <option value="hi-IN">Hindi</option>
+          <option value="ta-IN">Tamil</option>
+          <option value="kn-IN">Kannada</option>
+          <option value="ml-IN">Malayalam</option>
+          <option value="es-ES">Spanish</option>
+          <option value="fr-FR">French</option>
+          <option value="de-DE">German</option>
+          <option value="ja-JP">Japanese</option>
+        </select>
+        <label class="chat-speak-toggle"><input type="checkbox" id="chatSpeak" checked> Speak replies</label>
+        <div class="speech-buttons">
+          <button class="btn" id="pauseSpeech" type="button" disabled>Pause</button>
+          <button class="btn" id="stopSpeech" type="button" disabled>Stop voice</button>
+        </div>
+      </div>
+      <form class="composer chat-composer" id="form">
+        <button class="chat-mic" id="chatMic" type="button" aria-label="Start microphone" aria-pressed="false" title="Speak a message">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="2.5" width="6" height="12" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5M8.5 21.5h7"/></svg>
+        </button>
+        <input id="message" maxlength="4000" autocomplete="off" placeholder="Message Neural Brains…" aria-label="Message Neural Brains">
+        <button class="send-button" type="submit"><span>Send</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
+      </form>
+      <div class="compose-hint">Choose the language you will speak before using the mic. Replies use the detected writing system when possible · Enter to send</div>
+    </div>
+  </article>
+  <p class="notice" style="margin-top:12px">Conversation text and assistant replies are stored in the local SQLite experience database as plaintext. When Gemini is configured, your current message is also sent to Google for a response. Matching local memories are not sent by default. Browser speech recognition may send audio to a browser provider for transcription. Avoid entering passwords or sensitive information.</p>
+</section>
+
+<section class="page" id="page-memory">
+  <div class="pagehead"><div><h2>Experience memory</h2><p>Browse and filter the latest records saved in SQLite.</p></div><span class="tag" id="memoryCount">Loading records…</span></div>
+  <article class="card">
+    <div class="filters"><input class="search" id="memorySearch" placeholder="Search memory text…"><select class="select" id="memoryFilter"><option value="all">All record types</option><option value="prediction">Prediction</option><option value="conversation">Conversation</option><option value="assistant">Assistant response</option><option value="teaching">Teaching</option></select><button class="btn" id="memoryRefresh">Refresh memory</button></div>
+    <div class="tablewrap"><table><thead><tr><th>ID</th><th>Label / intent</th><th>Source</th><th>Experience</th><th>Saved at</th></tr></thead><tbody id="memoryRows"><tr><td colspan="5" class="empty">Loading…</td></tr></tbody></table></div>
+    <p class="notice" style="margin-top:12px">Showing up to 30 most recent records. This view is read-only; it does not delete or modify your memory.</p>
+  </article>
+</section>
+
+<section class="page" id="page-network">
+  <div class="pagehead"><div><h2>Neural network</h2><p>Conceptual architecture of the existing classifier.</p></div><span class="tag">Feed-forward · Softmax output</span></div>
+  <article class="card"><div class="cardhead"><h3>64 → 24 → 3 architecture</h3><span class="tag">Conceptual view, not live neuron activations</span></div><div id="fullNetwork"></div><div class="grid threecol" style="margin-top:15px"><div class="stat"><div class="muted">Input layer</div><strong>64</strong><small class="muted">Hashed word and bigram features</small></div><div class="stat"><div class="muted">Hidden layer</div><strong>24</strong><small class="muted">Learned intermediate representation</small></div><div class="stat"><div class="muted">Output layer</div><strong>3</strong><small class="muted">Greeting, question, task</small></div></div></article>
+</section>
+
+<section class="page" id="page-settings">
+  <div class="pagehead"><div><h2>Settings & system status</h2><p>Runtime diagnostics and privacy information.</p></div></div>
+  <article class="card">
+    <div class="settingsrow"><div><strong>Python API</strong><small>Local HTTP service at 127.0.0.1</small></div><span class="statuspill" id="apiStatus">Checking…</span></div>
+    <div class="settingsrow"><div><strong>Gemini cloud AI</strong><small id="geminiDetail">Checking provider configuration…</small></div><span class="statuspill" id="geminiStatus">Checking…</span></div>
+    <div class="settingsrow"><div><strong>Neural model file</strong><small id="settingsModelPath">—</small></div><span class="statuspill" id="modelStatus">Checking…</span></div>
+    <div class="settingsrow"><div><strong>Speech recognition</strong><small>Browser Web Speech API availability</small></div><span class="statuspill" id="speechStatus">Checking…</span></div>
+    <div class="settingsrow"><div><strong>Speech synthesis</strong><small>Browser text-to-speech availability</small></div><span class="statuspill" id="synthStatus">Checking…</span></div>
+    <div class="settingsrow"><div><strong>Memory storage</strong><small>SQLite file on this Mac; text is not encrypted</small></div><span class="statuspill ok">Local</span></div>
+  </article>
+  <article class="card" style="margin-top:14px"><h3>Privacy and operating notes</h3><p class="notice">The Python server binds to 127.0.0.1 and is not exposed to your local network. If Gemini is configured, the current chat message is sent from this Mac to Google; your Gemini API key stays in the local Python backend and is never sent to this page. Local SQLite memory remains on this Mac. Sharing matching memory context with Gemini is disabled by default. Google's free tier may use submitted content to improve its products, so do not send sensitive information. Browser speech recognition may also send audio to a browser provider for transcription. Wake phrase mode is phrase matching over browser-recognized speech, not a dedicated wake-word engine.</p></article>
+</section>
+<footer class="notice" style="margin-top:22px">NEURAL BRAINS · LOCAL WORKSPACE · <span id="lastUpdated">Not refreshed yet</span></footer>
+</main></div>
+
+<script>
+(() => {
+'use strict';
+const $ = id => document.getElementById(id);
+const state = {stats:null, memory:[], recognition:null, listening:false, shouldListen:false, restarting:false, muted:false, activePage:'overview', lastEngine:null};
+const pageMeta = {
+ overview:['Overview','Live view of your local assistant and learning activity.'],
+ voice:['Voice & Chat','Speak naturally or send a typed message.'],
+ memory:['Experience Memory','Search and inspect your latest saved experiences.'],
+ network:['Neural Network','Explore the architecture behind the original classifier.'],
+ settings:['Settings & Status','Runtime diagnostics and privacy information.']
+};
+function setStatus(message){
+ if($('voiceStatus'))$('voiceStatus').textContent=message;
+ if($('chatVoiceStatus'))$('chatVoiceStatus').textContent=message;
+}
+function syncMicUI(){
+ const active=!!(state.listening||state.shouldListen);
+ ['mic','chatMic'].forEach(id=>{
+   const button=$(id);if(!button)return;
+   button.classList.toggle('listening',active);
+   button.setAttribute('aria-pressed',String(active));
+   button.setAttribute('aria-label',active?'Stop microphone':'Start microphone');
+   button.title=active?'Stop voice input':'Speak a message';
+ });
+ if($('chatStatusDot'))$('chatStatusDot').classList.toggle('active',active);
+ if($('stop'))$('stop').disabled=!active;
+ if($('micTitle'))$('micTitle').textContent=active?($('wake').checked?'Listening for wake phrase':'Listening… speak now'):'Talk to Neural Brains';
+}
+function escapeText(value){return String(value ?? '');}
+function fmtDate(value){
+ if(!value)return '—';
+ const date=new Date(value);
+ return Number.isNaN(date.getTime())?value:date.toLocaleString();
+}
+function setPill(el,good,text){el.textContent=text;el.classList.toggle('ok',!!good);el.classList.toggle('bad',!good);}
+function navigate(page){
+ if(!pageMeta[page])return;
+ state.activePage=page;
+ document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));
+ document.querySelectorAll('.navbtn').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
+ $('pageTitle').textContent=pageMeta[page][0];$('pageSub').textContent=pageMeta[page][1];
+ if(page==='memory')renderMemory();
+}
+document.querySelectorAll('.navbtn').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.page)));
+document.querySelectorAll('[data-goto]').forEach(btn=>btn.addEventListener('click',()=>navigate(btn.dataset.goto)));
+
+function networkSvg(){
+ const xs=[75,300,525], counts=[9,7,3], ys=[42,40,65], colors=['input','node','output'];
+ let edges='';
+ for(let a=0;a<counts[0];a++)for(let b=0;b<counts[1];b++){
+   edges+=`<line class="edge" x1="${xs[0]}" y1="${ys[0]+a*17}" x2="${xs[1]}" y2="${ys[1]+b*22}"/>`;
+ }
+ for(let a=0;a<counts[1];a++)for(let b=0;b<counts[2];b++){
+   edges+=`<line class="edge" x1="${xs[1]}" y1="${ys[1]+a*22}" x2="${xs[2]}" y2="${ys[2]+b*38}"/>`;
+ }
+ let nodes='';
+ counts.forEach((count,layer)=>{for(let i=0;i<count;i++)nodes+=`<circle class="${colors[layer]}" cx="${xs[layer]}" cy="${ys[layer]+i*(layer===0?17:layer===1?22:38)}" r="${layer===1?6:7}"/>`;});
+ return `<svg class="network" viewBox="0 0 600 235" role="img" aria-label="Conceptual feed-forward network with input, hidden and output layers"><text x="75" y="20" fill="#a8bddc" text-anchor="middle" font-size="12">64 inputs</text><text x="300" y="20" fill="#a8bddc" text-anchor="middle" font-size="12">24 hidden</text><text x="525" y="20" fill="#a8bddc" text-anchor="middle" font-size="12">3 outputs</text>${edges}${nodes}<text x="525" y="194" fill="#f0c775" text-anchor="middle" font-size="10">greeting · question · task</text></svg>`;
+}
+$('miniNetwork').innerHTML=networkSvg();$('fullNetwork').innerHTML=networkSvg();
+
+function renderDistribution(){
+ const counts={greeting:0,question:0,task:0,other:0};
+ state.memory.forEach(row=>{counts[row.label] = (counts[row.label] ?? 0)+1;});
+ const keys=['greeting','question','task','other'], max=Math.max(1,...keys.map(k=>counts[k]));
+ $('distribution').innerHTML=keys.map(key=>`<div class="barcol"><div class="barcount">${counts[key]}</div><div class="bartrack"><div class="barfill" style="height:${Math.max(2,counts[key]/max*100)}%"></div></div><div class="barname">${key}</div></div>`).join('');
+}
+function renderActivity(){
+ const rows=state.memory.slice(0,6);
+ $('recentActivity').innerHTML=rows.length?rows.map(row=>`<div class="activityrow"><span class="activitydot"></span><div class="activitytext"><strong>${escapeText(row.text).slice(0,125)}</strong><small>${escapeText(row.source)} · ${escapeText(row.label)}</small></div><span class="time">${fmtDate(row.created_at)}</span></div>`).join(''):'<div class="empty">No saved experiences yet.</div>';
+}
+function renderMemory(){
+ const query=$('memorySearch').value.trim().toLowerCase(), filter=$('memoryFilter').value;
+ const rows=state.memory.filter(row=>(filter==='all'||row.source===filter)&&(!query||String(row.text).toLowerCase().includes(query)||String(row.label).toLowerCase().includes(query)));
+ $('memoryCount').textContent=`${rows.length} of ${state.memory.length} loaded`;
+ $('memoryRows').innerHTML=rows.length?rows.map(row=>{
+   const label=escapeText(row.label), source=escapeText(row.source);
+   return `<tr><td>${row.id}</td><td><span class="labeltag ${label}">${label}</span></td><td>${source}</td><td><div class="memorytext">${escapeText(row.text)}</div></td><td>${fmtDate(row.created_at)}</td></tr>`;
+ }).join(''):'<tr><td colspan="5" class="empty">No matching memory records.</td></tr>';
+}
+async function refreshData(){
+ try{
+   const [healthRes,statsRes,memoryRes]=await Promise.all([fetch('/api/health'),fetch('/api/stats'),fetch('/api/memory')]);
+   if(!healthRes.ok||!statsRes.ok||!memoryRes.ok)throw new Error('API returned an error');
+   const [health,stats,memory]=await Promise.all([healthRes.json(),statsRes.json(),memoryRes.json()]);
+   state.stats=stats;state.memory=Array.isArray(memory.items)?memory.items:[];
+   $('mExperiences').textContent=stats.experiences??'—';$('mUpdates').textContent=stats.training_updates??'—';
+   $('mModel').textContent=stats.model_loaded?'Loaded':'Saved';$('modelPath').textContent=stats.model_file||'Model path unavailable';
+   $('settingsModelPath').textContent=stats.model_file||'—';setPill($('modelStatus'),!!stats.model_file,'Saved');
+   const ai=health.ai||{};
+   if(ai.gemini_configured){setPill($('geminiStatus'),true,'Key present');$('geminiDetail').textContent='Model: '+(ai.gemini_model||'configured')+' · API checked on first message · memory context '+(ai.gemini_memory_context?'enabled':'off');if(!state.lastEngine)$('engine').textContent='Gemini key found · ready to test';}
+   else{setPill($('geminiStatus'),false,'Not configured');$('geminiDetail').textContent='Add GEMINI_API_KEY to the project .env file. Ollama remains optional.';if(!state.lastEngine)$('engine').textContent='No Gemini key · local fallback available';}
+   setPill($('connection'),true,'Backend online');$('sideStatus').textContent=health.name+' · 127.0.0.1';
+   setPill($('apiStatus'),true,'Online');
+   renderDistribution();renderActivity();renderMemory();
+   $('lastUpdated').textContent='Last refreshed '+new Date().toLocaleTimeString();
+ }catch(error){
+   setPill($('connection'),false,'Backend offline');$('sideStatus').textContent='Cannot reach local API';
+   setPill($('apiStatus'),false,'Offline');$('lastUpdated').textContent='Refresh failed: '+error.message;
+ }
+}
+const SPEECH_LANGUAGE_NAMES = {
+ 'en-US':'English', 'te-IN':'Telugu', 'hi-IN':'Hindi', 'ta-IN':'Tamil',
+ 'kn-IN':'Kannada', 'ml-IN':'Malayalam', 'es-ES':'Spanish',
+ 'fr-FR':'French', 'de-DE':'German', 'ja-JP':'Japanese'
+};
+const VOICE_LANGUAGE_STORAGE_KEY = 'neuralBrains.voiceLanguage';
+const SPEAK_ENABLED_STORAGE_KEY = 'neuralBrains.speakEnabled';
+function selectedSpeechLanguage(){
+ return $('voiceLanguage')?.value || 'en-US';
+}
+function restoreSpeechPreferences(){
+ try{
+   const savedLanguage=window.localStorage.getItem(VOICE_LANGUAGE_STORAGE_KEY);
+   if(savedLanguage && Array.from($('voiceLanguage').options).some(option=>option.value===savedLanguage)){
+     $('voiceLanguage').value=savedLanguage;
+   }
+   const savedSpeak=window.localStorage.getItem(SPEAK_ENABLED_STORAGE_KEY);
+   if(savedSpeak!==null){
+     const enabled=savedSpeak==='true';
+     $('speak').checked=enabled;
+     $('chatSpeak').checked=enabled;
+   }
+ }catch(error){console.warn('Could not restore voice preferences:',error);}
+}
+restoreSpeechPreferences();
+function detectSpeechLanguage(text){
+ const value=String(text||'');
+ if(/[\u0C00-\u0C7F]/.test(value))return 'te-IN'; // Telugu
+ if(/[\u0900-\u097F]/.test(value))return 'hi-IN'; // Devanagari / Hindi
+ if(/[\u0B80-\u0BFF]/.test(value))return 'ta-IN'; // Tamil
+ if(/[\u0C80-\u0CFF]/.test(value))return 'kn-IN'; // Kannada
+ if(/[\u0D00-\u0D7F]/.test(value))return 'ml-IN'; // Malayalam
+ if(/[\u3040-\u30FF]/.test(value))return 'ja-JP'; // Japanese kana
+ return selectedSpeechLanguage();
+}
+function syncSpeakPreference(enabled){
+ $('speak').checked=!!enabled;
+ $('chatSpeak').checked=!!enabled;
+ try{window.localStorage.setItem(SPEAK_ENABLED_STORAGE_KEY,String(!!enabled));}catch(error){console.warn('Could not save speech preference:',error);}
+ if(!enabled&&'speechSynthesis'in window){speechRequestId++;window.speechSynthesis.cancel();resetSpeechButtons();}
+}
+function resetSpeechButtons(){
+ if($('pauseSpeech')){$('pauseSpeech').disabled=true;$('pauseSpeech').textContent='Pause';}
+ if($('stopSpeech'))$('stopSpeech').disabled=true;
+}
+let speechRequestId=0;
+function waitForBrowserVoices(timeoutMs=5000){
+ const synth=window.speechSynthesis;
+ const current=synth.getVoices();
+ if(current.length)return Promise.resolve(current);
+ return new Promise(resolve=>{
+   let finished=false;
+   let pollId=null;
+   let timeoutId=null;
+   const cleanup=()=>{
+     if(pollId!==null)window.clearInterval(pollId);
+     if(timeoutId!==null)window.clearTimeout(timeoutId);
+     synth.removeEventListener?.('voiceschanged',check);
+   };
+   const finish=voices=>{
+     if(finished)return;
+     finished=true;
+     cleanup();
+     resolve(voices);
+   };
+   const check=()=>{
+     const available=synth.getVoices();
+     if(available.length)finish(available);
+   };
+   synth.addEventListener?.('voiceschanged',check);
+   pollId=window.setInterval(check,150);
+   timeoutId=window.setTimeout(()=>finish(synth.getVoices()),timeoutMs);
+   check();
+ });
+}
+async function speak(text){
+ if(state.muted||!$('speak').checked||!$('chatSpeak').checked||!('speechSynthesis'in window))return;
+ const phrase=String(text||'').trim();
+ if(!phrase)return;
+ const requestId=++speechRequestId;
+ const synth=window.speechSynthesis;
+ synth.cancel();
+ const locale=detectSpeechLanguage(phrase);
+ setStatus('Preparing '+(SPEECH_LANGUAGE_NAMES[locale]||locale)+' voice…');
+ const voices=await waitForBrowserVoices();
+ if(requestId!==speechRequestId||state.muted||!$('speak').checked||!$('chatSpeak').checked)return;
+ const language=locale.split('-')[0].toLowerCase();
+ const selectedVoice=voices.find(v=>v.lang.toLowerCase()===locale.toLowerCase()) ||
+   voices.find(v=>v.lang.toLowerCase().startsWith(language+'-'));
+ const utterance=new SpeechSynthesisUtterance(phrase);
+ utterance.lang=locale;
+ utterance.rate=0.95;
+ utterance.pitch=1;
+ if(selectedVoice){
+   utterance.voice=selectedVoice;
+   console.info('Neural Brains speech voice:',selectedVoice.name,selectedVoice.lang);
+ }else{
+   console.warn('No installed browser voice found for',locale,'; using browser language fallback.');
+ }
+ utterance.onstart=()=>{
+   if($('pauseSpeech')){$('pauseSpeech').disabled=false;$('pauseSpeech').textContent='Pause';}
+   if($('stopSpeech'))$('stopSpeech').disabled=false;
+   setStatus('Speaking in '+(SPEECH_LANGUAGE_NAMES[locale]||locale)+'…');
+ };
+ utterance.onend=()=>{resetSpeechButtons();setStatus('Ready. You can speak again.');};
+ utterance.onerror=event=>{
+   resetSpeechButtons();
+   setStatus('Speech playback issue: '+(event.error||'voice unavailable')+'. Check available voices in macOS/Chrome.');
+ };
+ synth.speak(utterance);
+}
+function toggleSpeechPause(){
+ if(!('speechSynthesis'in window))return;
+ if(window.speechSynthesis.paused){
+   window.speechSynthesis.resume();$('pauseSpeech').textContent='Pause';
+ }else if(window.speechSynthesis.speaking){
+   window.speechSynthesis.pause();$('pauseSpeech').textContent='Resume';
+ }
+}
+function stopSpeech(){
+ speechRequestId++;
+ if('speechSynthesis'in window)window.speechSynthesis.cancel();
+ resetSpeechButtons();
+ setStatus('Speech stopped.');
+}
+function addBubble(text,role){
+ const node=document.createElement('div');node.className='bubble '+role;node.textContent=text;
+ $('chat').appendChild(node);$('chat').scrollTop=$('chat').scrollHeight;
+}
+async function sendMessage(text){
+ const clean=(text||'').trim();if(!clean)return;
+ addBubble(clean,'user');$('message').value='';setStatus('Neural Brains is thinking…');
+ try{
+   const response=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:clean})});
+   const result=await response.json();if(!response.ok)throw new Error(result.error||'Request failed');
+   addBubble(result.answer,'assistant');state.lastEngine=result.engine;$('engine').textContent='Engine: '+result.engine+' · Intent: '+result.classification;
+   speak(result.answer);setStatus(result.provider_warning?result.provider_warning:'Ready. You can speak again.');await refreshData();
+ }catch(error){addBubble('I could not reach the Python backend: '+error.message,'assistant');setStatus('Backend error. Check the VS Code terminal.');}
+}
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+function stopRecognition(){
+ state.shouldListen=false;
+ if(state.recognition){try{state.recognition.stop();}catch(_){}}
+ state.listening=false;syncMicUI();setStatus('Microphone is off.');
+}
+function startRecognition(){
+ if(!SpeechRecognition){setStatus('Speech recognition is unavailable in this browser. Try current Google Chrome.');return;}
+ if(!state.recognition){
+   state.recognition=new SpeechRecognition();state.recognition.lang=selectedSpeechLanguage();state.recognition.continuous=true;state.recognition.interimResults=false;
+   state.recognition.onresult=event=>{
+     const result=event.results[event.results.length-1];if(!result.isFinal)return;
+     let transcript=result[0].transcript.trim();
+     if($('wake').checked){const match=transcript.match(/hey neural brains[,: ]*(.*)/i);if(!match){setStatus('Listening for “Hey Neural Brains”…');return;}transcript=match[1].trim();if(!transcript){setStatus('I’m listening. What would you like to ask?');return;}}
+     sendMessage(transcript);
+   };
+   state.recognition.onerror=event=>{
+     if(event.error==='not-allowed'||event.error==='service-not-allowed'){setStatus('Microphone permission denied. Allow microphone access in Chrome site settings.');stopRecognition();}
+     else if(event.error!=='no-speech'&&event.error!=='aborted')setStatus('Speech recognition issue: '+event.error);
+   };
+   state.recognition.onend=()=>{
+     state.listening=false;syncMicUI();
+     if(state.shouldListen&&!state.restarting){state.restarting=true;window.setTimeout(()=>{state.restarting=false;if(state.shouldListen){try{state.recognition.lang=selectedSpeechLanguage();state.recognition.start();state.listening=true;syncMicUI();}catch(_){state.shouldListen=false;state.listening=false;syncMicUI();setStatus('Microphone stopped. Tap the mic to start again.');}}},600);}
+     else if(!state.shouldListen){syncMicUI();}
+   };
+ }
+ state.shouldListen=true;
+ try{state.recognition.lang=selectedSpeechLanguage();state.recognition.start();state.listening=true;syncMicUI();setStatus('Listening in '+(SPEECH_LANGUAGE_NAMES[selectedSpeechLanguage()]||selectedSpeechLanguage())+'. Speak clearly.');}
+ catch(_){state.shouldListen=false;state.listening=false;syncMicUI();setStatus('Could not start microphone. Press the mic again and retry.');}
+}
+function toggleRecognition(){(state.listening||state.shouldListen)?stopRecognition():startRecognition();}
+$('mic').addEventListener('click',toggleRecognition);
+$('chatMic').addEventListener('click',toggleRecognition);
+$('stop').addEventListener('click',stopRecognition);
+$('mute').addEventListener('click',()=>{state.muted=!state.muted;$('mute').textContent=state.muted?'Unmute voice':'Mute voice';if(state.muted&&'speechSynthesis'in window){window.speechSynthesis.cancel();resetSpeechButtons();}});
+$('speak').addEventListener('change',()=>syncSpeakPreference($('speak').checked));
+$('chatSpeak').addEventListener('change',()=>syncSpeakPreference($('chatSpeak').checked));
+$('pauseSpeech').addEventListener('click',toggleSpeechPause);
+$('stopSpeech').addEventListener('click',stopSpeech);
+$('voiceLanguage').addEventListener('change',()=>{
+  try{window.localStorage.setItem(VOICE_LANGUAGE_STORAGE_KEY,selectedSpeechLanguage());}catch(error){console.warn('Could not save voice language:',error);}
+  if(state.recognition){
+    if(state.shouldListen){try{state.recognition.stop();}catch(_){}}
+    else state.recognition.lang=selectedSpeechLanguage();
+  }
+  setStatus('Voice language set to '+(SPEECH_LANGUAGE_NAMES[selectedSpeechLanguage()]||selectedSpeechLanguage())+'. This choice will be remembered.');
+});
+$('wake').addEventListener('change',()=>{if(state.listening){stopRecognition();startRecognition();}});
+$('form').addEventListener('submit',event=>{event.preventDefault();sendMessage($('message').value);});
+$('refresh').addEventListener('click',refreshData);$('memoryRefresh').addEventListener('click',refreshData);
+$('memorySearch').addEventListener('input',renderMemory);$('memoryFilter').addEventListener('change',renderMemory);
+$('speechStatus').textContent=SpeechRecognition?'Available in this browser':'Not available in this browser';
+$('synthStatus').textContent=('speechSynthesis'in window)?'Available in this browser':'Not available in this browser';
+if('speechSynthesis'in window){
+  const refreshVoiceStatus=()=>{
+    const voices=window.speechSynthesis.getVoices();
+    $('synthStatus').textContent=voices.length?`${voices.length} browser voices available; language coverage varies`:'Speech enabled; waiting for browser voices';
+  };
+  refreshVoiceStatus();
+  window.speechSynthesis.addEventListener?.('voiceschanged',refreshVoiceStatus);
+}
+if(!SpeechRecognition){$('mic').disabled=true;$('chatMic').disabled=true;$('chatMic').title='Speech recognition is not available in this browser';setStatus('Speech recognition is unavailable here. You can still type messages.');}
+window.addEventListener('beforeunload',()=>{stopRecognition();stopSpeech();});
+refreshData();window.setInterval(refreshData,15000);
+})();
+</script>
+</body></html>

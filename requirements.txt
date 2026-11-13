@@ -1,0 +1,3 @@
+# Neural Brains AI
+# The current application uses Python standard-library modules.
+# No third-party Python packages are currently required.
